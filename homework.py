@@ -75,8 +75,8 @@ class Running(Training):
         mean_speed: float = self.get_mean_speed()
         time_training_min: float = self.duration * self.MIN_IN_HOUR
         return ((self.index_calorie_1 * mean_speed
-                 - self.index_calorie_2) * self.weight /
-                 self.M_IN_KM * time_training_min)
+                 - self.index_calorie_2) * self.weight
+                / self.M_IN_KM * time_training_min)
 
 
 class SportsWalking(Training):
