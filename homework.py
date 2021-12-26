@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Dict, Type
 
 
@@ -12,19 +12,15 @@ class InfoMessage:
     speed: float
     calories: float
 
+    OUTPUT = ('Тип тренировки: {training_type}; '
+              'Длительность: {duration:.3f} ч.; '
+              'Дистанция: {distance:.3f} км; '
+              'Ср. скорость: {speed:.3f} км/ч; '
+              'Потрачено ккал: {calories:.3f}.')
+
     def get_message(self) -> str:
         """Вывод результата тренировки"""
-        return ('Тип тренировки: {training_type}; '
-                'Длительность: {duration:.3f} ч.; '
-                'Дистанция: {distance:.3f} км; '
-                'Ср. скорость: {speed:.3f} км/ч; '
-                'Потрачено ккал: {calories:.3f}.'
-                .format(training_type=self.training_type,
-                        duration=self.duration,
-                        distance=self.distance,
-                        speed=self.speed,
-                        calories=self.calories))
-
+        return self.OUTPUT.format(**asdict(self))
 
 class Training:
     """Базовый класс тренировки."""
@@ -135,14 +131,12 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_dict: Dict[str, Type[Training]] = \
-        {'SWM': Swimming,
-         'RUN': Running,
-         'WLK': SportsWalking}
-    if training_dict.get(workout_type):
-        return training_dict[workout_type](*data)
-    else:
-        return None
+    training_dict: Dict[str, Type[Training]] = {'SWM': Swimming,
+                                                'RUN': Running,
+                                                'WLK': SportsWalking}
+    if workout_type not in training_dict:
+        raise ValueError('Ошибка данных')
+    return training_dict[workout_type](*data)
 
 
 def main(training: Training) -> None:
@@ -153,14 +147,11 @@ def main(training: Training) -> None:
 
 if __name__ == '__main__':
     packages = [
-        ('SWM', [720, 1, 80, 25, 40]),
+        ('SM', [720, 1, 80, 25, 40]),
         ('RUN', [1206, 12, 6]),
         ('WLK', [9000, 1, 75, 180]),
     ]
 
     for workout_type, data in packages:
         training = read_package(workout_type, data)
-        if training is None:
-            print('Данного типа тренировки нету')
-        else:
-            main(training)
+        main(training)
