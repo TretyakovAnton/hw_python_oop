@@ -135,7 +135,7 @@ def read_package(workout_type: str, data: list) -> Training:
                                                 'RUN': Running,
                                                 'WLK': SportsWalking}
     if workout_type not in training_dict:
-        raise ValueError('Ошибка данных')
+        raise ValueError('Такой тренировки нету')
     return training_dict[workout_type](*data)
 
 
@@ -147,7 +147,7 @@ def main(training: Training) -> None:
 
 if __name__ == '__main__':
     packages = [
-        ('SM', [720, 1, 80, 25, 40]),
+        ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [1206, 12, 6]),
         ('WLK', [9000, 1, 75, 180]),
     ]
